@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.Document
 import org.bson.conversions.Bson
+import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.findAnnotations
@@ -37,11 +38,45 @@ abstract class KottaCollection<T: Any>(private val clazz: KClass<T>, private val
                 Indexes.ascending(index.fieldName)
             } else Indexes.descending(index.fieldName)
 
-            collection.createIndex(indexBson, IndexOptions()
+            val indexOptions = IndexOptions()
                 .unique(index.unique)
                 .sparse(index.sparse)
                 .background(index.background)
-            )
+                .hidden(index.hidden)
+
+            if (index.expireAfterSeconds != -1L) {
+                indexOptions.expireAfter(index.expireAfterSeconds, TimeUnit.SECONDS)
+            }
+
+            if (index.min != -1.0) {
+                indexOptions.min(index.min)
+            }
+
+            if (index.max != -1.0) {
+                indexOptions.max(index.max)
+            }
+
+            if (index.defaultLanguage != "") {
+                indexOptions.defaultLanguage(index.defaultLanguage)
+            }
+
+            if (index.languageOverride != "") {
+                indexOptions.languageOverride(index.languageOverride)
+            }
+
+            if (index.textVersion != -1) {
+                indexOptions.textVersion(index.textVersion)
+            }
+
+            if (index.sphereVersion != -1) {
+                indexOptions.sphereVersion(index.sphereVersion)
+            }
+
+            if (index.bits != -1) {
+                indexOptions.bits(index.bits)
+            }
+
+            collection.createIndex(indexBson, indexOptions)
         }
     }
 

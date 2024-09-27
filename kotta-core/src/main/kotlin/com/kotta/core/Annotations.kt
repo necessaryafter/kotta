@@ -4,7 +4,6 @@ package com.kotta.core
  * TODO LIST
  *
  * Add support to:
- *     private Long expireAfterSeconds;
  *     private Integer version;
  *     private Bson weights;
  *     private String defaultLanguage;
@@ -12,13 +11,10 @@ package com.kotta.core
  *     private Integer textVersion;
  *     private Integer sphereVersion;
  *     private Integer bits;
- *     private Double min;
- *     private Double max;
  *     private Bson storageEngine;
  *     private Bson partialFilterExpression;
  *     private Collation collation;
  *     private Bson wildcardProjection;
- *     private boolean hidden;
  *
  *  on index annotation.
  */
@@ -35,7 +31,16 @@ annotation class Index(
     val ascending: Boolean = true,
     val unique: Boolean = false,
     val sparse: Boolean = true,
-    val background: Boolean = true
+    val background: Boolean = true,
+    val hidden: Boolean = false,
+    val expireAfterSeconds: Long = -1L,
+    val min: Double = -1.0,
+    val max: Double = -1.0,
+    val defaultLanguage: String = "",
+    val languageOverride: String = "",
+    val textVersion: Int = -1,
+    val sphereVersion: Int = -1,
+    val bits: Int = -1
 )
 
 @Target(AnnotationTarget.FIELD)
